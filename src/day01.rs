@@ -1,35 +1,29 @@
-pub fn part1(input: String) {
-    println!(
-        "{}",
-        get_increase_count(
-            input
-                .split("\n")
-                .map(|line| line.parse::<i32>().unwrap())
-                .collect()
-        )
-    );
+pub fn part1(input: &str) -> u64 {
+    get_increase_count(parse_input(input))
 }
 
-pub fn part2(input: String) {
-    let input_nums: Vec<i32> = input
-        .split("\n")
-        .map(|line| line.parse::<i32>().unwrap())
-        .collect();
-    let pair_of_3_sums = input_nums
+pub fn part2(input: &str) -> u64 {
+    let input_numbers = parse_input(input);
+    let pair_of_3_sums = input_numbers
         .iter()
-        .zip(input_nums.iter().skip(1))
-        .zip(input_nums.iter().skip(2))
-        .map(|pair_of3| pair_of3.0 .0 + pair_of3.0 .1 + pair_of3.1)
+        .zip(input_numbers.iter().skip(1))
+        .zip(input_numbers.iter().skip(2))
+        .map(|((a, b), c)| a + b + c)
         .collect();
 
-    println!("{}", get_increase_count(pair_of_3_sums));
+    get_increase_count(pair_of_3_sums)
 }
 
-fn get_increase_count(nums: Vec<i32>) -> i32 {
-    nums.iter().zip(nums.iter().skip(1)).fold(0, |acc, e| {
-        if e.1 > e.0 {
-            return acc + 1;
-        }
-        acc
-    })
+fn parse_input(input: &str) -> Vec<i32> {
+    input
+        .lines()
+        .map(|line| line.parse::<i32>().unwrap())
+        .collect()
+}
+
+fn get_increase_count(numbers: Vec<i32>) -> u64 {
+    numbers
+        .iter()
+        .zip(numbers.iter().skip(1))
+        .fold(0, |acc, (a, b)| if b > a { acc + 1 } else { acc })
 }

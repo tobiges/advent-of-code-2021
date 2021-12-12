@@ -1,15 +1,15 @@
 type Coordinate = (usize, usize);
 
-pub fn part1(input: String) {
+pub fn part1(input: &str) -> u64 {
     let mut octopuses = parse_input(input);
-    let mut flash_count = 0_u32;
+    let mut flash_count = 0;
     for _ in 0..100 {
         flash_count += simulate_one_iteration(&mut octopuses);
     }
-    println!("Answer: {}", flash_count);
+    flash_count.into()
 }
 
-pub fn part2(input: String) {
+pub fn part2(input: &str) -> u64 {
     let mut octopuses = parse_input(input);
     let mut iteration = 0;
     loop {
@@ -18,10 +18,10 @@ pub fn part2(input: String) {
             break;
         }
     }
-    println!("Answer: {}", iteration);
+    iteration
 }
 
-fn parse_input(input: String) -> [[u32; 10]; 10] {
+fn parse_input(input: &str) -> [[u32; 10]; 10] {
     let mut octopuses = [[0_u32; 10]; 10];
     for (y, line) in input.lines().enumerate() {
         for (x, o) in line.char_indices() {
@@ -34,10 +34,10 @@ fn parse_input(input: String) -> [[u32; 10]; 10] {
 fn simulate_one_iteration(octopuses: &mut [[u32; 10]; 10]) -> u32 {
     let mut flash_count = 0;
     let mut octopuses_to_flash = Vec::new();
-    for y in 0..10 {
-        for x in 0..10 {
-            octopuses[y][x] += 1;
-            if octopuses[y][x] == 10 {
+    for (y, octopus_row) in octopuses.iter_mut().enumerate() {
+        for (x, octopus) in octopus_row.iter_mut().enumerate() {
+            *octopus += 1;
+            if *octopus == 10 {
                 octopuses_to_flash.push((y, x));
             }
         }
@@ -51,10 +51,10 @@ fn simulate_one_iteration(octopuses: &mut [[u32; 10]; 10]) -> u32 {
             }
         }
     }
-    for y in 0..10 {
-        for x in 0..10 {
-            if octopuses[y][x] > 9 {
-                octopuses[y][x] = 0;
+    for octopus_row in octopuses.iter_mut() {
+        for octopus in octopus_row {
+            if *octopus > 9 {
+                *octopus = 0;
             }
         }
     }

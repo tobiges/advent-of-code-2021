@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-type Coordinate = (i32, i32);
+type Coordinate = (u32, u32);
 
 struct VentLines {
     from: Coordinate,
@@ -39,15 +39,15 @@ impl VentLines {
     }
 }
 
-pub fn part1(input: String) {
-    solve(input, false);
+pub fn part1(input: &str) -> u64 {
+    solve(input, false)
 }
 
-pub fn part2(input: String) {
-    solve(input, true);
+pub fn part2(input: &str) -> u64 {
+    solve(input, true)
 }
 
-fn solve(input: String, consider_diagonal_lines: bool) {
+fn solve(input: &str, consider_diagonal_lines: bool) -> u64 {
     let mut number_of_lines_at_point = HashMap::new();
     input
         .lines()
@@ -59,14 +59,15 @@ fn solve(input: String, consider_diagonal_lines: bool) {
                 .and_modify(|e| *e += 1)
                 .or_insert(1);
         });
-    let two_or_more_lines_overlap = number_of_lines_at_point
+    number_of_lines_at_point
         .iter()
         .filter(|&(_, &line_count)| line_count >= 2)
-        .count();
-    println!("Answer: {}", two_or_more_lines_overlap);
+        .count()
+        .try_into()
+        .unwrap()
 }
 
-fn range_between_nums_inclusive(start: i32, end: i32) -> Box<dyn Iterator<Item = i32>> {
+fn range_between_nums_inclusive(start: u32, end: u32) -> Box<dyn Iterator<Item = u32>> {
     if start < end {
         Box::new(start..=end)
     } else {
@@ -76,5 +77,5 @@ fn range_between_nums_inclusive(start: i32, end: i32) -> Box<dyn Iterator<Item =
 
 fn coordinate_from_str(s: &str) -> Coordinate {
     let (x_str, y_str) = s.split_once(',').unwrap();
-    (x_str.parse::<i32>().unwrap(), y_str.parse::<i32>().unwrap())
+    (x_str.parse::<u32>().unwrap(), y_str.parse::<u32>().unwrap())
 }

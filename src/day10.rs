@@ -1,13 +1,12 @@
-pub fn part1(input: String) {
-    let answer: u64 = input
+pub fn part1(input: &str) -> u64 {
+    input
         .lines()
         .filter_map(|line| find_first_incorrect_char(line, &mut Vec::new()))
         .map(incorrect_char_to_points)
-        .sum();
-    println!("Answer: {}", answer);
+        .sum()
 }
 
-pub fn part2(input: String) {
+pub fn part2(input: &str) -> u64 {
     let mut all_points: Vec<u64> = input
         .lines()
         .filter_map(get_completion_for_line)
@@ -18,8 +17,7 @@ pub fn part2(input: String) {
         })
         .collect();
     all_points.sort_unstable();
-    let answer = all_points.get(all_points.len() / 2).unwrap();
-    println!("Answer: {}", answer);
+    *all_points.get(all_points.len() / 2).unwrap()
 }
 
 fn find_first_incorrect_char(line: &str, stack: &mut Vec<char>) -> Option<char> {

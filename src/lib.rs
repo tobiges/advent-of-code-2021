@@ -1,3 +1,5 @@
+use std::{env, fs};
+
 // Days
 pub mod day01;
 pub mod day02;
@@ -12,9 +14,7 @@ pub mod day10;
 pub mod day11;
 pub mod day12;
 
-pub fn noop(_inp: String) {}
-
-pub type DayFn = fn(String);
+pub type DayFn = fn(&str) -> u64;
 
 pub fn get_day(day: u32) -> (DayFn, DayFn) {
     match day {
@@ -30,9 +30,13 @@ pub fn get_day(day: u32) -> (DayFn, DayFn) {
         10 => (day10::part1, day10::part2),
         11 => (day11::part1, day11::part2),
         12 => (day12::part1, day12::part2),
-        _ => {
-            println!("Unknown day: {}", day);
-            (noop, noop)
-        }
+        _ => panic!("Unknown day: {}", day),
     }
+}
+
+pub fn get_input_for_day(day: u32) -> String {
+    let cwd = env::current_dir().unwrap();
+    let filename = cwd.join("inputs").join(format!("day{:02}.txt", day));
+    println!("Reading {}", filename.display());
+    fs::read_to_string(filename).expect("Error while reading")
 }

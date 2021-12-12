@@ -1,24 +1,22 @@
-pub fn part1(input: String) {
-    let answer = input
+pub fn part1(input: &str) -> u64 {
+    input
         .lines()
         .flat_map(|line| line.split_once('|').unwrap().1.split_ascii_whitespace())
         .fold(0, |acc, num| match num.len() {
             2 | 3 | 4 | 7 => acc + 1,
             _ => acc,
-        });
-    println!("Answer: {}", answer);
+        })
 }
 
-pub fn part2(input: String) {
-    let answer: u32 = input.lines().map(parse_line).map(solve).sum();
-    println!("Answer: {}", answer);
+pub fn part2(input: &str) -> u64 {
+    input.lines().map(parse_line).map(solve).sum::<u32>().into()
 }
 
 fn parse_line(combination: &str) -> Vec<u8> {
     combination
         .split(&[' ', '|'][..])
         .filter(|comb| !comb.is_empty())
-        .map(|comb| comb.chars().fold(0, |acc, c| acc | 1 << c as u8 - b'a'))
+        .map(|comb| comb.chars().fold(0, |acc, c| acc | 1 << (c as u8 - b'a')))
         .collect()
 }
 

@@ -1,13 +1,13 @@
-pub fn part1(input: String) {
-    solve(input, 80);
+pub fn part1(input: &str) -> u64 {
+    solve(input, 80)
 }
 
-pub fn part2(input: String) {
-    solve(input, 256);
+pub fn part2(input: &str) -> u64 {
+    solve(input, 256)
 }
 
-fn solve(input: String, days: usize) {
-    let mut fish_timers = [0usize; 9];
+fn solve(input: &str, days: usize) -> u64 {
+    let mut fish_timers = [0u64; 9];
     input
         .split(',')
         .map(|f| f.parse::<usize>().unwrap())
@@ -16,6 +16,5 @@ fn solve(input: String, days: usize) {
         fish_timers.rotate_left(1);
         fish_timers[6] += fish_timers[8];
     }
-    let final_fish_count: usize = fish_timers.iter().sum();
-    println!("Answer: {}", final_fish_count);
+    fish_timers.iter().sum()
 }

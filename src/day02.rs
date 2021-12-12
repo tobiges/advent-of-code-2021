@@ -1,28 +1,29 @@
 enum SubmarineCommand {
-    Forward(i32),
-    Up(i32),
-    Down(i32),
+    Forward(u32),
+    Up(u32),
+    Down(u32),
 }
 
 impl SubmarineCommand {
     pub fn from_string(command_string: &str) -> SubmarineCommand {
         if let Some(n) = command_string.strip_prefix("forward ") {
-            return SubmarineCommand::Forward(n.parse::<i32>().unwrap());
+            SubmarineCommand::Forward(n.parse::<u32>().unwrap())
         } else if let Some(n) = command_string.strip_prefix("up ") {
-            return SubmarineCommand::Up(n.parse::<i32>().unwrap());
+            SubmarineCommand::Up(n.parse::<u32>().unwrap())
         } else if let Some(n) = command_string.strip_prefix("down ") {
-            return SubmarineCommand::Down(n.parse::<i32>().unwrap());
+            SubmarineCommand::Down(n.parse::<u32>().unwrap())
+        } else {
+            panic!("invalid command!, got {}.", command_string)
         }
-        panic!("invalid command!, got {}.", command_string)
     }
 }
 
-pub fn part1(input: String) {
+pub fn part1(input: &str) -> u64 {
     let mut horizontal_pos = 0;
     let mut depth = 0;
 
     input
-        .split("\n")
+        .lines()
         .map(SubmarineCommand::from_string)
         .for_each(|cmd| match cmd {
             SubmarineCommand::Forward(x) => horizontal_pos += x,
@@ -30,16 +31,16 @@ pub fn part1(input: String) {
             SubmarineCommand::Down(x) => depth += x,
         });
 
-    print_answer(horizontal_pos, depth);
+    print_answer(horizontal_pos, depth)
 }
 
-pub fn part2(input: String) {
+pub fn part2(input: &str) -> u64 {
     let mut horizontal_pos = 0;
     let mut depth = 0;
     let mut aim = 0;
 
     input
-        .split("\n")
+        .lines()
         .map(SubmarineCommand::from_string)
         .for_each(|cmd| match cmd {
             SubmarineCommand::Forward(x) => {
@@ -50,11 +51,11 @@ pub fn part2(input: String) {
             SubmarineCommand::Down(x) => aim += x,
         });
 
-    print_answer(horizontal_pos, depth);
+    print_answer(horizontal_pos, depth)
 }
 
-fn print_answer(horizontal_pos: i32, depth: i32) {
+fn print_answer(horizontal_pos: u32, depth: u32) -> u64 {
     println!("final horizontal position: {}", horizontal_pos);
     println!("final depth: {}", depth);
-    println!("Product (answer): {}", horizontal_pos * depth)
+    (horizontal_pos * depth).into()
 }

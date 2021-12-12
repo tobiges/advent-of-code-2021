@@ -15,21 +15,21 @@ impl MostCommonBit {
     }
 }
 
-pub fn part1(input: String) {
+pub fn part1(input: &str) -> u64 {
     let most_common_bits =
-        calculate_all_most_common_bits(&input_to_u64vec(&input), input.find('\n').unwrap());
+        calculate_all_most_common_bits(&input_to_u64vec(input), input.find('\n').unwrap());
 
     let gamma_rate = most_common_bit_vec_to_dec(&most_common_bits, MostCommonBit::One);
     let epsilon_rate = most_common_bit_vec_to_dec(&most_common_bits, MostCommonBit::Zero);
 
     println!("gamma_rate: {}", gamma_rate);
     println!("epsilon_rate: {}", epsilon_rate);
-    println!("Product (answer): {}", gamma_rate * epsilon_rate)
+    gamma_rate * epsilon_rate
 }
 
-pub fn part2(input: String) {
+pub fn part2(input: &str) -> u64 {
     let line_length = input.find('\n').unwrap();
-    let mapped_input = input_to_u64vec(&input);
+    let mapped_input = input_to_u64vec(input);
 
     let oxygen_generator_rating =
         filter_equal_until_only_one_left(&mapped_input, line_length, |mcb, current_bit_is_one| {
@@ -48,10 +48,7 @@ pub fn part2(input: String) {
 
     println!("oxygen_generator_rating: {}", oxygen_generator_rating);
     println!("co2_scrubber_rating: {}", co2_scrubber_rating);
-    println!(
-        "Product (answer): {}",
-        oxygen_generator_rating * co2_scrubber_rating
-    )
+    oxygen_generator_rating * co2_scrubber_rating
 }
 
 fn input_to_u64vec(input: &str) -> Vec<u64> {
@@ -61,15 +58,15 @@ fn input_to_u64vec(input: &str) -> Vec<u64> {
         .collect()
 }
 
-fn calculate_all_most_common_bits(input: &Vec<u64>, line_length: usize) -> Vec<MostCommonBit> {
+fn calculate_all_most_common_bits(input: &[u64], line_length: usize) -> Vec<MostCommonBit> {
     let mut res: Vec<MostCommonBit> = Vec::with_capacity(line_length);
-    (0..line_length)
-        .rev()
-        .for_each(|i| res.push(calculate_most_common_bit_for_row(input, i)));
+    for i in (0..line_length).rev() {
+        res.push(calculate_most_common_bit_for_row(input, i))
+    }
     res
 }
 
-fn calculate_most_common_bit_for_row(input: &Vec<u64>, row: usize) -> MostCommonBit {
+fn calculate_most_common_bit_for_row(input: &[u64], row: usize) -> MostCommonBit {
     let mut relative_one_count = 0;
     let bit_filter = 1 << row;
     for line in input {
@@ -82,7 +79,7 @@ fn calculate_most_common_bit_for_row(input: &Vec<u64>, row: usize) -> MostCommon
     MostCommonBit::from_relative_one_count(relative_one_count)
 }
 
-fn most_common_bit_vec_to_dec(v: &Vec<MostCommonBit>, set_bit_one_on: MostCommonBit) -> u64 {
+fn most_common_bit_vec_to_dec(v: &[MostCommonBit], set_bit_one_on: MostCommonBit) -> u64 {
     v.iter()
         .zip((0..v.len()).rev())
         .fold(0, |acc, item| match item {
@@ -91,7 +88,7 @@ fn most_common_bit_vec_to_dec(v: &Vec<MostCommonBit>, set_bit_one_on: MostCommon
         })
 }
 
-fn filter_equal_until_only_one_left<F>(input: &Vec<u64>, line_length: usize, filter: F) -> u64
+fn filter_equal_until_only_one_left<F>(input: &[u64], line_length: usize, filter: F) -> u64
 where
     F: Fn(MostCommonBit, bool) -> bool,
 {
