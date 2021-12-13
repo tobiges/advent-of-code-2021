@@ -13,6 +13,7 @@ pub mod day09;
 pub mod day10;
 pub mod day11;
 pub mod day12;
+pub mod day13;
 
 pub type DayFn = fn(&str) -> u64;
 
@@ -30,6 +31,7 @@ pub fn get_day(day: u32) -> (DayFn, DayFn) {
         10 => (day10::part1, day10::part2),
         11 => (day11::part1, day11::part2),
         12 => (day12::part1, day12::part2),
+        13 => (day13::part1, day13::part2),
         _ => panic!("Unknown day: {}", day),
     }
 }
